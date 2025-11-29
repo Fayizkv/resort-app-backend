@@ -16,9 +16,10 @@ export const getResorts = async (req: Request, res: Response): Promise<void> => 
         const limit = parseInt(req.query.limit as string) || 10;
         const skip = parseInt(req.query.skip as string) || 0;
 
-        const resorts = await Resort.find().skip(skip).limit(limit);
-        const total = await Resort.countDocuments();
-
+        const [ resorts, total ] = await Promise.all([
+            Resort.find().skip(skip).limit(limit),
+            Resort.countDocuments(),
+        ])  
         res.json({
             success: true,
             data: resorts,

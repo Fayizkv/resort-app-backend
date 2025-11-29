@@ -4,16 +4,20 @@ export interface IResort extends Document {
     name: string;
     description: string;
     price: number;
-    amenities: string[];
     image: string;
+    pool: boolean;
+    turf: boolean;
+    facilities: Record<string, boolean>;
 }
 
 const ResortSchema: Schema = new Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    amenities: { type: [String], default: [] },
     image: { type: String, required: true }, // URL or path
+    pool: { type: Boolean, default: false },
+    turf: { type: Boolean, default: false },
+    facilities: { type: Schema.Types.Mixed, default: {} },
 }, { timestamps: true });
 
 export default mongoose.model<IResort>('Resort', ResortSchema);

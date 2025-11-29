@@ -31,14 +31,15 @@ export const getAllBookings = async (req: Request, res: Response): Promise<void>
         const limit = parseInt(req.query.limit as string) || 10;
         const skip = parseInt(req.query.skip as string) || 0;
 
-        const bookings = await Booking.find()
-            .populate('user', 'email')
-            .populate('resort', 'name')
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
-
-        const total = await Booking.countDocuments();
+        const [ bookings, total ] = await Promise.all([
+            Booking.find()
+                .populate('user', 'email')
+                .populate('resort', 'name')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Booking.countDocuments(),
+        ])  
 
         res.json({
             success: true,
